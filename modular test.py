@@ -16,7 +16,7 @@ import consistency
 import momentumanalysis
 import tradingtest
 
-pricedata = csvtoprices.readstockcsv('C:/Users/jakey/Documents/Python Finance/Momentum based strats/S&P500prices.csv',
+pricedata = csvtoprices.readstockcsv('S&P500pricesadj.csv',
                          '2010-12-01', '2016-12-05', "IVV", '3BMS')
 logreturns = csvtoprices.logreturn(pricedata, "IVV")
 
@@ -34,10 +34,10 @@ momentum = momentumanalysis.momentumanalyse(equitylogreturns = (logreturns['logr
 results = tradingtest.trade(rawlogreturns=(logreturns['logreturns'])[best_performers].loc[:,momentum], 
                             comparativelogreturns = (logreturns['relativelogreturns'])[best_performers].loc[:,momentum], 
                             startpoint = '2016-03-01', 
-                            comparativedatafile = 'SPYprices.csv', 
+                            comparativedatafile = 'SPYpricesadj.csv', 
                             startdate = '2016-03-01', 
                             enddate = '2016-12-01', 
-                            returnfile = r"C:/Users/jakey/Documents/Python Finance/Momentum based strats/MomentumReturnsModular.txt", 
+                            returnfile = "MomentumReturnsModular.txt", 
                             worstreturn = -0.15, Rsquared = 0.6)
 
 #it works wooooo
