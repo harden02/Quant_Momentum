@@ -1,6 +1,7 @@
 """Modularised data processor for S&P500 csv data (will extend to any stockprice csv eventuaolly)"""
 import numpy as np
 import pandas as pd
+from pandas.tseries.holiday import USFederalHolidayCalendar
 
 #Takes in local S&P500 csv in this folder and processes it for stock close prices over a certain time period and interval
 #Generates logarithmic returns file and log returns in relation to the ETF that is being tracked
@@ -32,21 +33,10 @@ def readstockcsv(file, startdate, enddate, ETFname, interval):
     
     pricedataraw = pd.read_csv(file, parse_dates = True, infer_datetime_format=(True), index_col = "Date")
     pricedata = pricedataraw[startdate:enddate] #must be a quicker way of doing this without first reading in csv, look up for future
-    pricedata = pricedata.resample(interval).asfreq()
-    pricedatashifted = pricedata.copy()
-    pricedatashifted.index=np.where(pricedatashifted.isna().all(axis=1), pricedatashifted.index.shift(1, freq='B'), pricedatashifted.index)
-    finalprices=pricedataraw.loc[pricedatashifted.index]
-    finalprices.index.names = ['Date']
+    pricedataresample = pricedata.resample(interval).asfreq()
+    finalprices = pd.merge_asof(pricedataresample, pricedata, on = "Date", allow_exact_matches = True, direction = "backward")
     finalprices.dropna(axis=1, inplace=True)
-    
-    #pricedata = pd.read_csv(file, parse_dates = True, index_col = "Date")
-    #pricedata = pricedata[startdate:enddate] #must be a quicker way of doing this without first reading in csv, look up for future
-    #pricedata = pricedata.resample("B").asfreq().ffill() #required to fill in the missing days that pandas will force resample instead of just realising to go 1 forward
-    #pricedata = pricedata.resample(interval).asfreq()
-    #pricedata.dropna(subset=[ETFname], inplace=True)
-    #pricedata.dropna(axis=1, inplace=True)
-    #if len(pricedata) < 25:
-        #raise Exception("Pricedata not long enough, adjust dates so they don't fall on holidays!")
+    finalprices.columns = finalprices.columns.str.strip('_y')
     return finalprices
 
 

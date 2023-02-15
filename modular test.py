@@ -22,14 +22,14 @@ file = 'S&P500pricesadj.csv'
 startdate = '2010-12-01'
 enddate = '2016-12-05'
 ETFname = "IVV"
-interval = '3BMS'
+interval = 'Q'
 lookback_date = '2015-12-01'
 worstreturn = -0.15
 formation_start = '2015-06-01'
 formation_end = '2015-12-01'
 Rsquared = 0.6
 slope = 0
-use_gradient = False
+use_gradient = True
 tradestartpoint = '2016-03-01'
 comparativedatafile = 'SPYpricesadj.csv'
 tradeenddate = '2016-09-01'
@@ -59,6 +59,27 @@ with open(returnfile, "a") as results_file:
     results_file.write(f"\n{startdate},{enddate},{tradestartpoint},{worstreturn},{Rsquared}, {use_gradient}, {results[0]},{results[1]},{results[2]}")
 #writes results to txt file in csv format
 
-#it works wooooo
+test = logreturns['logreturns']['IVV']
+test = test[tradestartpoint:tradeenddate]
+test = np.exp(test.sum())
+
+
+"""SPYpricedata = pd.read_csv(comparativedatafile, parse_dates = True, index_col = "Date")
+SPYpricedata = SPYpricedata[startdate:tradeenddate] 
+SPYpricedata = SPYpricedata.resample("B").asfreq().ffill()
+SPYpricedata = SPYpricedata.resample("3BMS").asfreq()
+SPYpricedata.dropna(inplace=True)
+#importing SPY for pure benchmark
+SPYlogreturns=np.log(SPYpricedata/SPYpricedata.shift(1))  #calculates log returns 
+SPYreturns = SPYlogreturns[tradestartpoint:tradeenddate]  #returns from SPY over hold period
+SPYreturn = np.exp(SPYreturns.sum()) #overall SPY return"""
+
+"""pricedataraw = pd.read_csv(file, parse_dates = True, infer_datetime_format=(True), index_col = "Date")
+pricedata = pricedataraw[startdate:enddate] #must be a quicker way of doing this without first reading in csv, look up for future
+pricedataresample = pricedata.resample(interval).asfreq()
+finalprices = pd.merge_asof(pricedataresample, pricedata, on = "Date", allow_exact_matches = True, direction = "backward")
+finalprices.dropna(axis=1, inplace=True)
+finalprices.columns = finalprices.columns.str.strip('_y')
+#it works wooooo"""
 
 #def run(file, startdate, enddate, ETFname, interval, formation_start, formation_end, Rsquared, slope, use_gradient )
