@@ -40,11 +40,13 @@ def momentumanalyse(equitylogreturns, formation_start, formation_end, Rsquared, 
 
     momentumreturns=equitylogreturns.loc[formation_start:formation_end] #looks at raw log returns in year before holding period
     
-    if use_gradient == True:
+    if use_gradient == False:
         
         straightreturns = np.exp(momentumreturns.sum())
         toppercent = math.floor(0.2*len(straightreturns))
         highestmomentum = straightreturns.nlargest(n=toppercent, keep='first')
+        plt.style.use('seaborn')
+        momentumreturns.plot(kind='line', figsize=(24, 15), title='log returns formation period', legend=None)
         return highestmomentum.index
         
     else:

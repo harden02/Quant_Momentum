@@ -20,19 +20,19 @@ import tradingtest
 
 file = 'S&P500pricesadj.csv'
 startdate = '2010-12-01'
-enddate = '2016-12-05'
+enddate = '2016-12-31'
 ETFname = "IVV"
 interval = 'Q'
-lookback_date = '2015-12-01'
+lookback_date = '2015-12-31'
 worstreturn = -0.15
-formation_start = '2015-06-01'
-formation_end = '2015-12-01'
+formation_start = '2015-09-30'
+formation_end = '2016-03-31'
 Rsquared = 0.6
 slope = 0
 use_gradient = True
-tradestartpoint = '2016-03-01'
+tradestartpoint = '2016-06-30'
 comparativedatafile = 'SPYpricesadj.csv'
-tradeenddate = '2016-09-01'
+tradeenddate = '2016-12-31'
 returnfile = "MomentumReturnsModular.txt"
 
 pricedata = csvtoprices.readstockcsv(file, startdate, enddate, ETFname, interval)
@@ -53,7 +53,8 @@ results = tradingtest.trade(rawlogreturns=(logreturns['logreturns'])[best_perfor
                             comparativelogreturns = (logreturns['relativelogreturns'])[best_performers].loc[:,momentum], 
                             startpoint = tradestartpoint , 
                             comparativedatafile = comparativedatafile, 
-                            enddate = tradeenddate)
+                            enddate = tradeenddate,
+                            interval = interval)
 
 with open(returnfile, "a") as results_file:
     results_file.write(f"\n{startdate},{enddate},{tradestartpoint},{worstreturn},{Rsquared}, {use_gradient}, {results[0]},{results[1]},{results[2]}")
@@ -80,6 +81,7 @@ pricedataresample = pricedata.resample(interval).asfreq()
 finalprices = pd.merge_asof(pricedataresample, pricedata, on = "Date", allow_exact_matches = True, direction = "backward")
 finalprices.dropna(axis=1, inplace=True)
 finalprices.columns = finalprices.columns.str.strip('_y')
+finalprices.set_index("Date", inplace=True)
 #it works wooooo"""
 
 #def run(file, startdate, enddate, ETFname, interval, formation_start, formation_end, Rsquared, slope, use_gradient )

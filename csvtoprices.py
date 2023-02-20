@@ -37,6 +37,7 @@ def readstockcsv(file, startdate, enddate, ETFname, interval):
     finalprices = pd.merge_asof(pricedataresample, pricedata, on = "Date", allow_exact_matches = True, direction = "backward")
     finalprices.dropna(axis=1, inplace=True)
     finalprices.columns = finalprices.columns.str.strip('_y')
+    finalprices.set_index("Date", inplace=True)
     return finalprices
 
 

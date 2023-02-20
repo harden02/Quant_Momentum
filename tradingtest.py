@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def trade(rawlogreturns, comparativelogreturns, startpoint, comparativedatafile, enddate):
+def trade(rawlogreturns, comparativelogreturns, startpoint, comparativedatafile, enddate, interval):
     """
     
 
@@ -42,13 +42,15 @@ def trade(rawlogreturns, comparativelogreturns, startpoint, comparativedatafile,
     print("return in tested holding period:", strategyreturn)
     print("performance compared to benchmark in holding period:", benchmarkreturn)
     
-    SPYpricedata = pd.read_csv(comparativedatafile, parse_dates = True, index_col = "Date")
-    SPYpricedata = SPYpricedata[startpoint:enddate] 
-    SPYpricedata = SPYpricedata.resample("B").asfreq().ffill()
-    SPYpricedata = SPYpricedata.resample("3BMS").asfreq()
-    SPYpricedata.dropna(inplace=True)
+    SPYpricedataraw = pd.read_csv(comparativedatafile, parse_dates = True, index_col = "Date")
+    SPYpricedata = SPYpricedataraw[:enddate] #must be a quicker way of doing this without first reading in csv, look up for future
+    SPYpricedataresample = SPYpricedata.resample(interval).asfreq()
+    SPYfinalprices = pd.merge_asof(SPYpricedataresample, SPYpricedata, on = "Date", allow_exact_matches = True, direction = "backward")
+    SPYfinalprices.dropna(axis=1, inplace=True)
+    SPYfinalprices.columns = SPYfinalprices.columns.str.strip('_y')
+    SPYfinalprices.set_index("Date", inplace=True)
     #importing SPY for pure benchmark
-    SPYlogreturns=np.log(SPYpricedata/SPYpricedata.shift(1))  #calculates log returns 
+    SPYlogreturns=np.log(SPYfinalprices/SPYfinalprices.shift(1))  #calculates log returns 
     SPYreturns = SPYlogreturns[startpoint:enddate]  #returns from SPY over hold period
     SPYreturn = np.exp(SPYreturns.sum()) #overall SPY return
     print('performance of SPY in same period was', SPYreturn)
