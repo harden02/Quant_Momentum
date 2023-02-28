@@ -19,20 +19,20 @@ import tradingtest
 """Set Variables from here"""
 
 file = 'S&P500pricesadj.csv'
-startdate = '2010-12-01'
-enddate = '2016-12-31'
+startdate = '2011-12-31'
+enddate = '2017-12-31'
 ETFname = "IVV"
 interval = 'Q'
-lookback_date = '2015-12-31'
+lookback_date = '2016-12-31'
 worstreturn = -0.15
-formation_start = '2015-09-30'
-formation_end = '2016-03-31'
+formation_start = '2016-09-30'
+formation_end = '2017-03-31'
 Rsquared = 0.6
 slope = 0
-use_gradient = True
-tradestartpoint = '2016-06-30'
+use_gradient = False
+tradestartpoint = '2017-06-30'
 comparativedatafile = 'SPYpricesadj.csv'
-tradeenddate = '2016-12-31'
+tradeenddate = '2017-12-31'
 returnfile = "MomentumReturnsModular.txt"
 
 pricedata = csvtoprices.readstockcsv(file, startdate, enddate, ETFname, interval)
