@@ -60,4 +60,3 @@ def log_return(stock_data, etf_name):
         relative_log_returns[column] = log_returns[column] - log_returns[etf_name]  # compares log returns to those of ETF
     return {"log_returns": log_returns, "relative_log_returns": relative_log_returns}
         
-read_stock_csv("S&P500pricesadj.csv", "2010-02-01", "2023-01-01", "^GSPC", "1d")
