@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['csv_to_prices.py', 'modular_test.py']
+recent_files = ['csvtoprices.py', 'consistency.py', 'momentumanalysis.py', 'tradingtest.py', 'modular test.py', 'MomentumReturnsModular.txt', 'ResultsAnalysis.py']
 
 [main]
 version = 0.2.0
